@@ -1,0 +1,117 @@
+[project]
+name = "specslot"
+version = "0.1.0"
+description = "Pixel-space generative Transformers with spectral slot allocation"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "torch==2.5.1",
+    "torchvision==0.20.1",
+    "numpy==1.24.4",
+    "scipy==1.9.1",
+    "opencv-python-headless==4.11.0.86",
+    "timm==0.9.12",
+    "wandb",
+    "tensorboard==2.20.0",
+    "einops==0.8.1",
+    "gdown==5.2.0",
+    "torch-fidelity",
+    "open-clip-torch>=2.26.1",
+    "Pillow>=9.5",
+    "transformers==4.48.3",
+    "tokenizers==0.21.4",
+    "huggingface-hub==0.27.1",
+    "PyYAML>=5.4",
+    "tqdm>=4.66",
+    "matplotlib>=3.5",
+    "setuptools==75.8.0",
+]
+
+[project.optional-dependencies]
+eval = [
+    "torchaudio==2.5.1",
+    "mmcv-full==1.7.2",
+    "mmdet==2.28.2",
+    "fairseq==0.12.2",
+    "addict>=2.4.0",
+    "accelerate>=0.29.0",
+    "attrs>=23.1.0",
+    "datasets>=4.0,<4.9",
+    "modelscope>=1.18.0",
+    "decord>=0.6.0",
+    "librosa==0.10.2.post1",
+    "soundfile>=0.12.1",
+    "rapidfuzz>=3.0",
+    "unicodedata2>=15.1",
+    "zhconv>=1.4.3",
+    "cffi>=1.15",
+    "cython>=0.29",
+    "hydra-core==1.0.7",
+    "omegaconf==2.0.6",
+    "regex>=2023.0",
+    "sacrebleu>=1.4.12",
+    "bitarray>=2.0",
+    "tensorboardX>=2.6",
+    "pandas>=2.0,<2.1",
+    "clip-benchmark>=1.4.0",
+    "python-dateutil>=2.8.2",
+    "simplejson>=3.3.0",
+    "sortedcontainers>=1.5.9",
+    "urllib3>=1.26",
+    "pycocotools>=2.0.6",
+    "terminaltables>=3.1",
+    "yapf>=0.33",
+    "six>=1.16",
+    "ninja>=1.11",
+    "pip==24.0",
+]
+
+[tool.uv]
+package = false
+required-version = "==0.12.21"
+environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
+build-constraint-dependencies = ["setuptools==75.8.0", "wheel==0.45.1"]
+
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu124" }
+torchvision = { index = "pytorch-cu124" }
+torchaudio = { index = "pytorch-cu124" }
+torch-fidelity = { git = "https://github.com/LTH14/torch-fidelity.git", rev = "bfe72b995473e4fee9351705d7b005f17442a4ca" }
+
+# Supply missing build dependencies without changing the training environment.
+[tool.uv.extra-build-dependencies]
+mmcv-full = [{ requirement = "torch", match-runtime = true }, "numpy==1.24.4", "opencv-python-headless==4.11.0.86", "packaging", "ninja"]
+mmdet = [{ requirement = "torch", match-runtime = true }, "numpy==1.24.4"]
+fairseq = ["numpy==1.24.4", "cython"]
+
+[tool.uv.extra-build-variables]
+mmcv-full = { MMCV_WITH_OPS = "1", FORCE_CUDA = "1", MAX_JOBS = "8" }
+fairseq = { READTHEDOCS = "1" }
+
+# Upstream runtime metadata avoids invoking CUDA builds while resolving a lock.
+# Sources: MMCV v1.7.2 requirements/runtime.txt; Fairseq 0.12.2 wheel metadata;
+# JiT torch-fidelity at the commit above and its setup metadata.
+[[tool.uv.dependency-metadata]]
+name = "mmcv-full"
+version = "1.7.2"
+requires-dist = ["addict", "numpy", "packaging", "Pillow", "pyyaml", "regex; sys_platform == 'win32'", "yapf"]
+
+[[tool.uv.dependency-metadata]]
+name = "fairseq"
+version = "0.12.2"
+requires-dist = [
+    "cffi", "cython", "hydra-core>=1.0.7,<1.1", "omegaconf<2.1",
+    "regex", "sacrebleu>=1.4.12", "torch", "tqdm", "bitarray", "torchaudio>=0.8.0",
+    "dataclasses; python_version < '3.7'", "numpy<1.20.0; python_version < '3.7'",
+    "numpy; python_version >= '3.7'",
+]
+
+[[tool.uv.dependency-metadata]]
+name = "torch-fidelity"
+version = "0.4.0b0"
+requires-python = ">=3.6"
+requires-dist = ["numpy", "pillow", "torch", "torchvision", "tqdm"]
