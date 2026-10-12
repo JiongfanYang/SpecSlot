@@ -97,7 +97,7 @@ independent 32-query text adapters of the same shape.
 | JiT-B/16 | 2.90 | 50.71 | 59.22 | 24.89 |
 | JiT-B/8 | 2.90 | 218.77 | 61.15 | **29.78** |
 | | | | | |
-| **SpecSlot (W256/K4)** | 4.00 | 128.86 | **62.21** | 26.99 |
+| **SpecSlot (W256/K4)** | 4.00 | 129.86 | **62.21** | 26.99 |
 
 # 🛠️ Setup
 
