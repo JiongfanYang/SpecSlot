@@ -30,19 +30,23 @@
 
 # 📌 TL;DR
 
-**The problem.** Pixel-space Transformers spend quadratic global-attention
-compute on every patch token, even though additional visual detail is largely
-local.
+**The problem.** In pixel-space Transformers, one patch grid fixes everything
+at once: how finely the input is read, what each token predicts, and how many
+tokens join global attention. Finer detail therefore inflates the quadratic
+global stage directly. Yet not every output role needs global communication:
+low-frequency structure benefits from global exchange, while high-frequency
+detail can be modeled locally.
 
 **The method.** SpecSlot makes token roles explicit:
 
-- **Spectral allocation:** each spatial anchor owns fixed, disjoint radial DCT slots.
-- **Carrier routing:** only the lowest-frequency slot communicates globally; the remaining slots stay local.
+- **Spectral allocation:** each spatial anchor expands into K slots; every slot owns a fixed, disjoint band of DCT coefficients.
+- **Carrier routing:** only the lowest-frequency slot of each anchor joins the global stage; all slots interact locally within their anchor.
 - **Dual-basis decoding:** a spectral prediction and a local spatial correction are combined in pixel space.
 
 **The result.** SpecSlot gives a controllable quality–compute frontier. On
-ImageNet-512, W256/K4 reaches **9.14 FID at 135.64 GFLOPs**, within 0.69 FID
-of JiT-B/16 at 38.2% lower forward cost. In text-to-image generation, it
+ImageNet-512, SpecSlot (W256/K4) reaches **9.14 FID at 135.64 GFLOPs**: 2.84
+FID below the FLOPs-matched JiT-CM control at 3.9% lower cost, and within
+0.69 FID of JiT-B/16 at 38.2% lower cost. In text-to-image generation, it
 reaches **62.21 DPG-Bench**, surpassing JiT-B/8 (61.15) at 41.1% lower cost.
 
 <p align="center">
@@ -60,33 +64,40 @@ better when lower; IS and throughput are better when higher.
 
 ### ImageNet-256
 
-| Model | CFG | FID ↓ | IS ↑ | GFLOPs ↓ | img/s ↑ |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| JiT-B/16 | 2.90 | 7.51 | 174.81 | 50.45 | 33.08 |
-| SpecSlot W256/K2/B512 | 5.00 | 7.27 | 219.49 | 82.63 | 21.32 |
-| SpecSlot W256/K4/B1536 | 4.00 | 6.59 | 215.20 | 129.20 | 9.06 |
-| JiT-B/8 | 2.90 | **4.34** | **225.72** | 218.50 | 8.15 |
+| Model | Tokens | B | CFG | FID ↓ | IS ↑ | GFLOPs ↓ | img/s ↑ |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| JiT-B/16 | 256 | – | 2.90 | 7.51 | 174.81 | 50.45 | 33.08 |
+| JiT-B/8 | 1,024 | – | 2.90 | **4.34** | **225.72** | 218.50 | 8.15 |
+| SF-B/16 | 256 | – | 2.90 | 7.81 | 172.35 | 50.85 | 32.89 |
+| JiT-CM | 1,024 | – | 2.90 | 6.68 | 182.56 | 124.24 | 8.94 |
+| | | | | | | | |
+| **SpecSlot (W256/K2)** | 512 | 512 | 5.00 | 7.27 | 219.49 | 82.63 | 21.32 |
+| **SpecSlot (W256/K4)** | 1,024 | 1,536 | 4.00 | 6.59 | 215.20 | 129.20 | 9.06 |
 
 ### ImageNet-512
 
-| Model | CFG | FID ↓ | IS ↑ | GFLOPs ↓ | img/s ↑ |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| JiT-B/32 | 2.90 | 15.88 | 162.12 | 51.50 | 30.61 |
-| SpecSlot W256/K2/B3072 | 10.50 | 10.94 | 183.69 | 94.52 | 18.32 |
-| SpecSlot W256/K4/B4096 | 8.25 | 9.14 | **208.24** | 135.64 | 12.69 |
-| JiT-B/16 | 2.90 | **8.45** | 196.61 | 219.56 | 7.93 |
+| Model | Tokens | B | CFG | FID ↓ | IS ↑ | GFLOPs ↓ | img/s ↑ |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| JiT-B/32 | 256 | – | 2.90 | 15.88 | 162.12 | 51.50 | 30.61 |
+| JiT-B/16 | 1,024 | – | 2.90 | **8.45** | 196.61 | 219.56 | 7.93 |
+| SF-B/32 | 256 | – | 9.50 | 11.41 | 172.48 | 54.72 | 30.88 |
+| JiT-CM | 1,024 | – | 2.90 | 11.98 | 178.72 | 141.21 | 8.51 |
+| | | | | | | | |
+| **SpecSlot (W256/K2)** | 512 | 3,072 | 10.50 | 10.94 | 183.69 | 94.52 | 18.32 |
+| **SpecSlot (W256/K4)** | 1,024 | 4,096 | 8.25 | 9.14 | **208.24** | 135.64 | 12.69 |
 
 ## 📝 Text-to-image
 
 The 256px protocol uses the BLIP3o JourneyDB, Long-Caption, and Short-Caption
-mixture. SpecSlot and JiT share a frozen OpenCLIP ViT-L/14 encoder and a
-trainable 32-token text adapter.
+mixture. SpecSlot and JiT share a frozen OpenCLIP ViT-L/14 encoder and use
+independent 32-query text adapters of the same shape.
 
 | Model | CFG | GFLOPs ↓ | DPG-Bench ↑ | GenEval ↑ |
 | --- | ---: | ---: | ---: | ---: |
 | JiT-B/16 | 2.90 | 50.71 | 59.22 | 24.89 |
-| SpecSlot W256/K4/B1536 | 4.00 | 128.86 | **62.21** | 26.99 |
 | JiT-B/8 | 2.90 | 218.77 | 61.15 | **29.78** |
+| | | | | |
+| **SpecSlot (W256/K4)** | 4.00 | 128.86 | **62.21** | 26.99 |
 
 # 🛠️ Setup
 
