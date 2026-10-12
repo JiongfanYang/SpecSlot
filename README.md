@@ -4,7 +4,7 @@
 
 <p>
   <a href="https://yangjiongfan.site">Jiongfan Yang</a><sup>1,3</sup> ·
-  <a href="https://weichenfan.github.io/Weichen/">Weichen Fan</a><sup>2,3</sup> ·
+  <a href="https://weichenfan.github.io/Weichen/">Weichen Fan</a><sup>2</sup> ·
   <a href="https://paranioar.github.io/">Haiwen Diao</a><sup>2</sup> ·
   <a href="https://caizhongang.com/">Zhongang Cai</a><sup>3</sup> ·
   <a href="https://liuziwei7.github.io/">Ziwei Liu</a><sup>2</sup>
