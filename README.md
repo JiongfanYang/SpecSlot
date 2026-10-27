@@ -47,7 +47,7 @@ detail can be modeled locally.
 ImageNet-512, SpecSlot (W256/K4) reaches **9.14 FID at 135.64 GFLOPs**: 2.84
 FID below the FLOPs-matched JiT-CM control at 3.9% lower cost, and within
 0.69 FID of JiT-B/16 at 38.2% lower cost. In text-to-image generation, it
-reaches **62.21 DPG-Bench**, surpassing JiT-B/8 (61.15) at 41.1% lower cost.
+reaches **62.21 DPG-Bench**, surpassing JiT-B/8 (61.15) at 40.6% lower cost.
 
 <p align="center">
   <img src="assets/architecture.png" width="90%"
@@ -169,8 +169,8 @@ Place the BLIP3o WebDataset mixture under one directory:
 /path/to/your/T2I/**/*.tar
 ```
 
-The launcher uses the paper's 256px, 400-epoch protocol and resumes from
-`checkpoint-last.pth` when a run directory already contains one.
+The launcher uses the paper's 256px, 400-epoch protocol. Set `RESUME=auto` to
+resume from `checkpoint-last.pth`; without it, the run starts from scratch.
 
 ```bash
 # SpecSlot W256/K4/B1536
