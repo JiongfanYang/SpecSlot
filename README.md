@@ -11,6 +11,7 @@
 </p>
 <h3>Peking University · Nanyang Technological University · SenseTime</h3>
 
+<a href="https://yangjiongfan.site/specslot/"><img src="https://img.shields.io/badge/%F0%9F%8C%90%20Project%20Page-SpecSlot-526D60" alt="SpecSlot project page"></a>
 <a href="https://github.com/JiongfanYang/SpecSlot"><img src="https://img.shields.io/badge/GitHub-SpecSlot-181717?logo=github" alt="SpecSlot on GitHub"></a>
 <a href="https://huggingface.co/Gokottaw434/SpecSlot"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-checkpoints-yellow" alt="Hugging Face checkpoints"></a>
 <img src="https://img.shields.io/badge/arXiv-coming%20soon-b31b1b?logo=arxiv" alt="arXiv coming soon">
