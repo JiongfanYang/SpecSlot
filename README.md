@@ -37,6 +37,14 @@ global stage directly. Yet not every output role needs global communication:
 low-frequency structure benefits from global exchange, while high-frequency
 detail can be modeled locally.
 
+<p align="center">
+  <a href="assets/allocation.pdf">
+    <img src="assets/allocation.png" width="90%"
+         alt="JiT patch-grid tokenization versus SpecSlot allocation into spatial anchors and spectral slots, with global carrier attention and local slot attention">
+  </a>
+</p>
+<p align="center"><em>N = W × K separates spatial anchor density W from spectral subdivision K. Global attention uses one image carrier per anchor plus the context states.</em></p>
+
 **The method.** SpecSlot makes token roles explicit:
 
 - **Spectral allocation:** each spatial anchor expands into K slots; every slot owns a fixed, disjoint band of DCT coefficients.
@@ -50,10 +58,12 @@ FID below the FLOPs-matched JiT-CM control at 3.9% lower cost, and within
 reaches **62.21 DPG-Bench**, surpassing JiT-B/8 (61.15) at 40.6% lower cost.
 
 <p align="center">
-  <img src="assets/architecture.png" width="90%"
-       alt="SpecSlot architecture: spatial evidence, spectral slot allocation, carrier routing, and dual-basis decoding">
+  <a href="assets/architecture.pdf">
+    <img src="assets/architecture.png" width="90%"
+         alt="SpecSlot data flow: Read, Allocate, Route, and Decode, with global carrier attention, local slot attention, and spectral-plus-spatial output">
+  </a>
 </p>
-<p align="center"><em>SpecSlot separates spatial anchor density from spectral subdivision and assigns global communication to the carrier role.</em></p>
+<p align="center"><em>Read → Allocate → Route → Decode: the final slot states produce a lapped-DCT spectral base and a spatial residual, summed in pixel space.</em></p>
 
 # 📊 Results
 
