@@ -14,7 +14,7 @@
 <a href="https://yangjiongfan.site/specslot/"><img src="https://img.shields.io/badge/%F0%9F%8C%90%20Project%20Page-SpecSlot-526D60" alt="SpecSlot project page"></a>
 <a href="https://github.com/JiongfanYang/SpecSlot"><img src="https://img.shields.io/badge/GitHub-SpecSlot-181717?logo=github" alt="SpecSlot on GitHub"></a>
 <a href="https://huggingface.co/Gokottaw434/SpecSlot"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-checkpoints-yellow" alt="Hugging Face checkpoints"></a>
-<img src="https://img.shields.io/badge/arXiv-coming%20soon-b31b1b?logo=arxiv" alt="arXiv coming soon">
+<a href="https://arxiv.org/abs/2610.40647"><img src="https://img.shields.io/badge/arXiv-2610.40647-b31b1b?logo=arxiv" alt="arXiv:2610.40647"></a>
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
 
 </div>
@@ -26,7 +26,7 @@
 
 # 🔥 News
 
-- **2026-10-11** — Initial release of the SpecSlot code and pretrained checkpoints.
+- **2026-10-30** — The SpecSlot paper is now available on [arXiv](https://arxiv.org/abs/2610.40647).
 - **2026-10-11** — Pretrained checkpoints are available on [Hugging Face](https://huggingface.co/Gokottaw434/SpecSlot).
 
 # 📌 TL;DR
@@ -239,10 +239,14 @@ vanilla pixel-space Transformer baseline.
 # 📚 Citation
 
 ```bibtex
-@article{yang2026specslot,
-  title   = {Read, Allocate, Route: Role-Coupled Tokenization for Pixel-Space Generative Transformers},
-  author  = {Yang, Jiongfan and Fan, Weichen and Diao, Haiwen and Cai, Zhongang and Liu, Ziwei},
-  year    = {2026}
+@misc{yang2026readallocaterouterolecoupled,
+      title={Read, Allocate, Route: Role-Coupled Tokenization for Pixel-Space Generative Transformers},
+      author={Jiongfan Yang and Weichen Fan and Haiwen Diao and Zhongang Cai and Ziwei Liu},
+      year={2026},
+      eprint={2610.40647},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2610.40647},
 }
 ```
 
